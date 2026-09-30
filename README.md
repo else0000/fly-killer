@@ -97,6 +97,21 @@ prefix has to match the Pages subpath or the deployed page loads with no assets.
 Running `npm run preview` locally serves the built output under the same prefix, so you
 can imitate production before pushing.
 
+### If the first run fails
+
+`Get Pages site failed ... Not Found` means no Pages site exists for the repository yet —
+the Pages API returns 404 before any artifact is built. Set the source to GitHub Actions
+as described above and re-run; the workflow does not need to change. The
+`enablement: true` option on the configure step tries to do this automatically, but the
+default `GITHUB_TOKEN` cannot always perform an admin operation, so the settings toggle is
+the dependable route.
+
+`Create Pages site failed ... Resource not accessible by integration` is the same
+underlying problem surfacing through that same token limitation — same fix.
+
+Note that a private repository on a free plan cannot serve Pages at all; it has to be a
+public repository or a paid plan.
+
 ## Stack
 
 TypeScript 6 · Vite 8 · Vitest 5 · ESLint 10 (type-aware, flat config) · Prettier.
