@@ -100,17 +100,15 @@ can imitate production before pushing.
 ### If the first run fails
 
 `Get Pages site failed ... Not Found` means no Pages site exists for the repository yet —
-the Pages API returns 404 before any artifact is built. Set the source to GitHub Actions
-as described above and re-run; the workflow does not need to change. The
-`enablement: true` option on the configure step tries to do this automatically, but the
-default `GITHUB_TOKEN` cannot always perform an admin operation, so the settings toggle is
-the dependable route.
+the Pages API returns 404 before any artifact is built. Nothing in the repository can fix
+this one: creating a Pages site is a repository-administration operation, and the automatic
+`GITHUB_TOKEN` cannot be granted `administration:write`, so `enablement: true` on the
+configure step just trades that clear error for `Resource not accessible by integration`.
+Set the source to GitHub Actions once, as described above, then re-run the workflow. No
+code change and no further commit is needed.
 
-`Create Pages site failed ... Resource not accessible by integration` is the same
-underlying problem surfacing through that same token limitation — same fix.
-
-Note that a private repository on a free plan cannot serve Pages at all; it has to be a
-public repository or a paid plan.
+If there is no Pages section in the repository settings at all, the repository is private
+on a free plan, which cannot serve Pages — it has to be public or on a paid plan.
 
 ## Stack
 
