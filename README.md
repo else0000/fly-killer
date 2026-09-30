@@ -9,7 +9,8 @@ npm install
 npm run dev
 ```
 
-Then open http://localhost:5173.
+Vite prints the exact URL to open. Because of the GitHub Pages base path it is
+http://localhost:5173/fly-killer/ rather than the bare root.
 
 ## Controls
 
@@ -37,6 +38,8 @@ cursor fighting you. The teal ring shows exactly where a swing will land.
 ## Layout
 
 ```
+.github/workflows/
+  deploy.yml            Lint, test, build, then publish to GitHub Pages
 index.html              Shell markup; the canvas lives here
 src/main.ts             Entry point: canvas, DPR scaling, wiring, visibility pause
 src/style.css           Page chrome and responsive canvas sizing
@@ -73,6 +76,26 @@ function is the single place that scales the challenge with score.
 Add a field to the relevant entity in `world.ts`, mutate it in `updateWorld`, then draw it in
 `render.ts`. If it needs player input, extend `Intent` and have `input.ts` provide it. Remember
 to store `prev` alongside `pos` on anything that moves so interpolation keeps working.
+
+## Deploying to GitHub Pages
+
+`.github/workflows/deploy.yml` runs on every push to `main` (and on demand from the
+Actions tab). It installs with `npm ci`, lints, tests, builds, and publishes `dist/`
+through the Pages deployment API. A failing lint, test, or type check stops the deploy.
+
+One-time setup, after the code is on GitHub:
+
+1. Push the repo to GitHub, named **`fly-killer`**.
+2. In the repo: **Settings → Pages → Build and deployment → Source → GitHub Actions**.
+   Do not pick "Deploy from a branch" — there is no `gh-pages` branch to serve.
+3. Push to `main` (or run the workflow manually). The site appears at
+   `https://<your-user>.github.io/fly-killer/`.
+
+If the repository ends up with a different name, the live URL changes and so must the
+build: update the single `base` value in `vite.config.ts` to `'/<repo-name>/'`. That
+prefix has to match the Pages subpath or the deployed page loads with no assets.
+Running `npm run preview` locally serves the built output under the same prefix, so you
+can imitate production before pushing.
 
 ## Stack
 
